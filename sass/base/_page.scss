@@ -9,8 +9,22 @@
   align-items: center;
 }
 
-.stat-table {
-  .stat-row {
+.statTable {
+  border-collapse: collapse;
+  text-align: center;
+
+  .statRow:not(:last-child) { 
+    border-bottom: 1px solid black;
+    padding: 1rem;
+  }
+  .dataName {
     border: 1px solid black;
   }
+
+  // .rightData {
+    
+  // }
 }
+
+
+
