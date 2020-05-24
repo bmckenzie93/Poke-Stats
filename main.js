@@ -46,9 +46,8 @@ const leftStatHeight = document.querySelector('.statRow__height-left');
 const rightStatHeight = document.querySelector('.statRow__height-right');
 
 
-// FETCH POKEMON FROM API => OBJECTS
-
-function getPokemon(index) {
+// FETCH POKEMON - Fill Select Lists
+function getAllPokemon() {
   for(let i=1; i<= 150; i++) {
     const url = `https://pokeapi.co/api/v2/pokemon/${i}/`
     
@@ -76,9 +75,6 @@ function getPokemon(index) {
           height: data.height,
         };
 
-          const leftSelect = document.getElementById('leftSelect');
-          const rightSelect = document.getElementById('rightSelect');
-
           const leftOption = document.createElement('option');
           const rightOption = document.createElement('option');
 
@@ -95,8 +91,97 @@ function getPokemon(index) {
   }
 }
 
+//gets all pokemon and fills the select list with their name's & id's
+getAllPokemon(); 
 
 
-getPokemon(1);
 
-//When pokemon is selected, use the value to display the stats by the id.
+
+// function displayRightPokemon(e) {
+//   const iChooseYou = e.target.value;
+
+//   getPokemon(iChooseYou);
+//   console.log(getPokemon(iChooseYou))
+// }
+
+
+
+
+
+function getPokemon(index, side) {
+  const url = `https://pokeapi.co/api/v2/pokemon/${index}/`
+    
+  fetch(url)  
+    .then(res => res.json()) 
+    .then(data => {
+      const pokemon = {
+        id: data.id,
+        name: data.name,
+        image: data.sprites.front_default,
+        abilities: data.abilities
+          .map(ability => ability.ability.name)
+          .join(' / '),
+        type: data.types
+          .map(type =>  type.type.name)
+          .join(' / '),
+        speed: data.stats[0].base_stat,
+        specialDef: data.stats[1].base_stat,
+        specialAtk: data.stats[2].base_stat,
+        def: data.stats[3].base_stat,
+        atk: data.stats[4].base_stat,
+        hp: data.stats[5].base_stat,
+        baseExp: data.base_experience,
+        weight: data.weight,
+        height: data.height,
+      }
+
+      if(side === 'left') {
+        leftName.textContent = pokemon.name.toUpperCase();
+        leftSprite.src = pokemon.image;
+        leftStatName.textContent = pokemon.name.toUpperCase();
+        leftStatType.textContent = pokemon.type;
+        leftStatAbilities.textContent = pokemon.abilities;
+        leftStatHp.textContent = pokemon.hp;
+        leftStatAtk.textContent = pokemon.atk;
+        leftStatDef.textContent = pokemon.def;
+        leftStatSpecialAtk.textContent = pokemon.specialAtk;
+        leftStatSpecialDef.textContent = pokemon.specialDef;
+        leftStatSpeed.textContent = pokemon.speed;
+        leftStatExp.textContent = pokemon.exp;
+        leftStatWeight.textContent = pokemon.weight;
+        leftStatHeight.textContent = pokemon.height;
+      } else if(side === 'right') {
+        rightName.textContent = pokemon.name.toUpperCase();
+        rightSprite.src = pokemon.image;
+        rightStatName.textContent = pokemon.name.toUpperCase();
+        rightStatType.textContent = pokemon.type;
+        rightStatAbilities.textContent = pokemon.abilities;
+        rightStatHp.textContent = pokemon.hp;
+        rightStatAtk.textContent = pokemon.atk;
+        rightStatDef.textContent = pokemon.def;
+        rightStatSpecialAtk.textContent = pokemon.specialAtk;
+        rightStatSpecialDef.textContent = pokemon.specialDef;
+        rightStatSpeed.textContent = pokemon.speed;
+        rightStatExp.textContent = pokemon.exp;
+        rightStatWeight.textContent = pokemon.weight;
+        rightStatHeight.textContent = pokemon.height;
+      }
+      
+    }
+  )
+}
+
+leftSelect.addEventListener('change', displayLeftPokemon);
+rightSelect.addEventListener('change', displayRightPokemon);
+
+function displayLeftPokemon(e) {
+  const iChooseYou = e.target.value;
+
+  getPokemon(iChooseYou, 'left'); 
+}
+
+function displayRightPokemon(e) {
+  const iChooseYou = e.target.value;
+
+  getPokemon(iChooseYou, 'right');
+}
