@@ -46,142 +46,134 @@ const leftStatHeight = document.querySelector('.statRow__height-left');
 const rightStatHeight = document.querySelector('.statRow__height-right');
 
 
-// FETCH POKEMON - Fill Select Lists
-function getAllPokemon() {
-  for(let i=1; i<= 150; i++) {
-    const url = `https://pokeapi.co/api/v2/pokemon/${i}/`
-    
-    fetch(url)  
-      .then(res => res.json()) 
-      .then(data => {
-        const pokemon = {
-          id: data.id,
-          name: data.name,
-          image: data.sprites.front_default,
-          abilities: data.abilities
-            .map(ability => ability.ability.name)
-            .join(' / '),
-          type: data.types
-            .map(type =>  type.type.name)
-            .join(' / '),
-          speed: data.stats[0].base_stat,
-          specialDef: data.stats[1].base_stat,
-          specialAtk: data.stats[2].base_stat,
-          def: data.stats[3].base_stat,
-          atk: data.stats[4].base_stat,
-          hp: data.stats[5].base_stat,
-          baseExp: data.base_experience,
-          weight: data.weight,
-          height: data.height,
-        };
 
-          const leftOption = document.createElement('option');
-          const rightOption = document.createElement('option');
-
-          leftOption.value = pokemon.id;
-          rightOption.value = pokemon.id;
-
-          leftOption.appendChild( document.createTextNode(`${pokemon.id}. ${pokemon.name}`) );
-          rightOption.appendChild( document.createTextNode(`${pokemon.id}. ${pokemon.name}`) );
-
-          leftSelect.appendChild(leftOption);
-          rightSelect.appendChild(rightOption);
-      }
-    );
-  }
-}
-
-//gets all pokemon and fills the select list with their name's & id's
-getAllPokemon(); 
-
-
-
-
-// function displayRightPokemon(e) {
-//   const iChooseYou = e.target.value;
-
-//   getPokemon(iChooseYou);
-//   console.log(getPokemon(iChooseYou))
-// }
-
-
-
-
-
-function getPokemon(index, side) {
-  const url = `https://pokeapi.co/api/v2/pokemon/${index}/`
-    
-  fetch(url)  
-    .then(res => res.json()) 
-    .then(data => {
-      const pokemon = {
-        id: data.id,
-        name: data.name,
-        image: data.sprites.front_default,
-        abilities: data.abilities
-          .map(ability => ability.ability.name)
-          .join(' / '),
-        type: data.types
-          .map(type =>  type.type.name)
-          .join(' / '),
-        speed: data.stats[0].base_stat,
-        specialDef: data.stats[1].base_stat,
-        specialAtk: data.stats[2].base_stat,
-        def: data.stats[3].base_stat,
-        atk: data.stats[4].base_stat,
-        hp: data.stats[5].base_stat,
-        baseExp: data.base_experience,
-        weight: data.weight,
-        height: data.height,
-      }
-
-      if(side === 'left') {
-        leftName.textContent = pokemon.name.toUpperCase();
-        leftSprite.src = pokemon.image;
-        leftStatName.textContent = pokemon.name.toUpperCase();
-        leftStatType.textContent = pokemon.type;
-        leftStatAbilities.textContent = pokemon.abilities;
-        leftStatHp.textContent = pokemon.hp;
-        leftStatAtk.textContent = pokemon.atk;
-        leftStatDef.textContent = pokemon.def;
-        leftStatSpecialAtk.textContent = pokemon.specialAtk;
-        leftStatSpecialDef.textContent = pokemon.specialDef;
-        leftStatSpeed.textContent = pokemon.speed;
-        leftStatExp.textContent = pokemon.exp;
-        leftStatWeight.textContent = pokemon.weight;
-        leftStatHeight.textContent = pokemon.height;
-      } else if(side === 'right') {
-        rightName.textContent = pokemon.name.toUpperCase();
-        rightSprite.src = pokemon.image;
-        rightStatName.textContent = pokemon.name.toUpperCase();
-        rightStatType.textContent = pokemon.type;
-        rightStatAbilities.textContent = pokemon.abilities;
-        rightStatHp.textContent = pokemon.hp;
-        rightStatAtk.textContent = pokemon.atk;
-        rightStatDef.textContent = pokemon.def;
-        rightStatSpecialAtk.textContent = pokemon.specialAtk;
-        rightStatSpecialDef.textContent = pokemon.specialDef;
-        rightStatSpeed.textContent = pokemon.speed;
-        rightStatExp.textContent = pokemon.exp;
-        rightStatWeight.textContent = pokemon.weight;
-        rightStatHeight.textContent = pokemon.height;
-      }
-      
-    }
-  )
-}
+//  EVENT LISTENERS
 
 leftSelect.addEventListener('change', displayLeftPokemon);
 rightSelect.addEventListener('change', displayRightPokemon);
+document.addEventListener('DOMContentLoaded', displayDefault);
+
+
+// FUNCTIONS
 
 function displayLeftPokemon(e) {
   const iChooseYou = e.target.value;
-
-  getPokemon(iChooseYou, 'left'); 
+  paintPokemon(iChooseYou, 'left'); 
 }
 
 function displayRightPokemon(e) {
   const iChooseYou = e.target.value;
-
-  getPokemon(iChooseYou, 'right');
+  paintPokemon(iChooseYou, 'right');
 }
+
+function displayDefault() {
+  paintPokemon(1, 'left');
+  paintPokemon(1, 'right');
+}
+
+
+// FETCH ALL POKEMON
+async function getAllPokemon() {
+  // start with empty array
+  const promices = [];
+
+  // fetch all promices from each ajax call
+  for(let i=1; i<= 807; i++) {
+    const url = `https://pokeapi.co/api/v2/pokemon/${i}/`
+  
+    // put all promices in the array
+    promices.push(
+      fetch(url).then(res => res.json())
+    );
+  };
+
+  const pokemonDataArray = await Promise.all(promices);
+
+  // map array of results into array of usable pokemon objects
+  const pokemonForList = pokemonDataArray.map( data => ({
+    id: data.id,
+    name: data.name,
+  }));
+
+  // Add each pokemon to the select lists
+  pokemonForList.forEach(onePokemon => {
+    const leftOption = document.createElement('option');
+    const rightOption = document.createElement('option');
+
+    leftOption.value = onePokemon.id;
+    rightOption.value = onePokemon.id;
+
+    leftOption.appendChild( document.createTextNode(`${onePokemon.id}. ${onePokemon.name}`) );
+    rightOption.appendChild( document.createTextNode(`${onePokemon.id}. ${onePokemon.name}`) );
+
+    leftSelect.appendChild(leftOption);
+    rightSelect.appendChild(rightOption);
+  })
+};
+getAllPokemon(); 
+
+
+
+// GET SINGLE POKEMON - Paint to DOM
+async function paintPokemon(index, side) {
+  const url = `https://pokeapi.co/api/v2/pokemon/${index}/`
+  
+  const data = await fetch(url)
+    .then(res => res.json());
+
+  const pokemon = {
+    id: data.id,
+    name: data.name,
+    image: data.sprites.front_default,
+    abilities: data.abilities
+      .map(ability => ability.ability.name)
+      .join(' / '),
+    type: data.types
+      .map(type =>  type.type.name)
+      .join(' / '),
+    speed: data.stats[0].base_stat,
+    specialDef: data.stats[1].base_stat,
+    specialAtk: data.stats[2].base_stat,
+    def: data.stats[3].base_stat,
+    atk: data.stats[4].base_stat,
+    hp: data.stats[5].base_stat,
+    baseExp: data.base_experience,
+    weight: data.weight,
+    height: data.height,
+  }
+
+  if(side === 'left') {
+    leftName.textContent = pokemon.name.toUpperCase();
+    leftSprite.src = pokemon.image;
+    leftSprite.alt = `${pokemon.name} image`;
+    leftStatName.textContent = pokemon.name.toUpperCase();
+    leftStatType.textContent = pokemon.type;
+    leftStatAbilities.textContent = pokemon.abilities;
+    leftStatHp.textContent = pokemon.hp;
+    leftStatAtk.textContent = pokemon.atk;
+    leftStatDef.textContent = pokemon.def;
+    leftStatSpecialAtk.textContent = pokemon.specialAtk;
+    leftStatSpecialDef.textContent = pokemon.specialDef;
+    leftStatSpeed.textContent = pokemon.speed;
+    leftStatExp.textContent = pokemon.baseExp;
+    leftStatWeight.textContent = pokemon.weight;
+    leftStatHeight.textContent = pokemon.height;
+  } else if(side === 'right') {
+    rightName.textContent = pokemon.name.toUpperCase();
+    rightSprite.src = pokemon.image;
+    rightSprite.alt = `${pokemon.name} image`;
+    rightStatName.textContent = pokemon.name.toUpperCase();
+    rightStatType.textContent = pokemon.type;
+    rightStatAbilities.textContent = pokemon.abilities;
+    rightStatHp.textContent = pokemon.hp;
+    rightStatAtk.textContent = pokemon.atk;
+    rightStatDef.textContent = pokemon.def;
+    rightStatSpecialAtk.textContent = pokemon.specialAtk;
+    rightStatSpecialDef.textContent = pokemon.specialDef;
+    rightStatSpeed.textContent = pokemon.speed;
+    rightStatExp.textContent = pokemon.baseExp;
+    rightStatWeight.textContent = pokemon.weight;
+    rightStatHeight.textContent = pokemon.height;
+  }
+};
+

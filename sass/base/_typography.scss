@@ -1,4 +1,18 @@
 .heading-primary {
+  font-size: 3rem;
   text-align: center;
   text-transform: uppercase;
+  margin: 0;
+  background-image: linear-gradient(to right, transparent, orange, transparent);
+}
+
+.leftName,
+.rightName {
+  font-size: 2rem;
+  color: #fff;
+  background-color: rgb(154, 0, 0);
+  padding: .5rem 1rem;
+  border-radius: 20px;
+  transform: translateY(-2rem);
+  border: 3px solid #fff;
 }

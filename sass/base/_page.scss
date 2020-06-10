@@ -1,6 +1,47 @@
+.container {
+  width: 60%;
+  margin: 0 auto;
+}
+
 .battle-box {
   display: flex;
   justify-content: space-around;
+  margin-bottom: 5rem;
+}
+
+.leftSide,
+.rightSide {
+  max-width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: .1rem;
+  background-image: linear-gradient(to bottom, black, blue, rgb(0, 174, 255), #fff, rgb(0, 174, 255), blue, black);
+  border-radius: 50%;
+  margin: 1rem;
+  border: 3px solid #fff;
+  padding: 1rem;
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.5);
+}
+
+.leftImage,
+.rightImage {
+  width: 50%;
+
+  img {
+    width: 100%;
+  }
+}
+
+.leftSelect,
+.rightSelect {
+  font-weight: 800;;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  transform: translateY(4rem);
 }
 
 .table-container {
@@ -20,10 +61,6 @@
   .dataName {
     border: 1px solid black;
   }
-
-  // .rightData {
-    
-  // }
 }
 
 
